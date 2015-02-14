@@ -37,6 +37,7 @@ int main(int argc, char **argv) {
 	  fprintf (stderr,
 		   "Command line usage: %s [flags] -- prefix [recipients]\n",
 		   argv[0]);
+	  free(opts);
 	  return 1;
 	}
 
