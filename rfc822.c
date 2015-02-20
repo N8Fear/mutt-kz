@@ -385,8 +385,8 @@ ADDRESS *rfc822_parse_adrlist (ADDRESS *top, const char *s)
     last = last->next;
 
   if (s == NULL) {
-		printf("\ns was NULL\n");
-		return NULL;
+    /* TODO: find source of nullpointer deref */
+    return NULL;
   }
   ws_pending = is_email_wsp (*s);
   if ((nl = mutt_strlen (s)))
