@@ -160,10 +160,7 @@ static char *make_sidebar_entry(char *box, int size, int new, int flagged)
 
 void set_curbuffy(char buf[LONG_STRING])
 {
-  BUFFY* tmp = CurBuffy = get_incoming();
-
-  if (!get_incoming())
-    return;
+  BUFFY* tmp = TopBuffy;
 
   while(1) {
     if(!strcmp(tmp->path, buf)) {
@@ -269,8 +266,7 @@ int draw_sidebar(int menu) {
                 prev_show_value = option(OPTSIDEBAR);
                 saveSidebarWidth = SidebarWidth;
                 if(!option(OPTSIDEBAR)) SidebarWidth = 0;
-                initialized = true;
-		SidebarLastRefresh = time(NULL);
+                SidebarLastRefresh = time(NULL);
         }
 
         /* save or restore the value SidebarWidth */
@@ -347,7 +343,25 @@ int draw_sidebar(int menu) {
 
 	sort_sidebar(TopBuffy, SidebarSort);
 
-	tmp = TopBuffy;
+	tmp= TopBuffy;
+	if (!initialized) {
+				initialized = true;
+				while(1) {
+					if(strstr(tmp->path, "INBOX")) {
+						CurBuffy = tmp;
+						tmp = TopBuffy;
+						break;
+					}
+
+					if(tmp->next)
+						tmp = tmp->next;
+					else {
+						tmp = TopBuffy;
+						break;
+					}
+				}
+	}
+
 	SETCOLOR(MT_COLOR_NORMAL);
 
 	for ( ; tmp && lines < LINES-1 - (menu != MENU_PAGER ||
